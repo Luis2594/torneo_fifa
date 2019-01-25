@@ -17,21 +17,19 @@ const Button = ({ onPress, bg, children }) => {
 };
 
 const styles = StyleSheet.create({
-    textStyle: {
-        alignSelf: 'center',
-        color: '#FFF',
-        fontSize: 16,
-        fontWeight: '600',
-    },
     buttonStyle: {
-        height: 60,
         width: 100,
+        height: 60
     },
     imgBackground: {
-        width: 100,
-        height: 60,
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    textStyle: {
+        color: '#FFF',
+        fontSize: 16,
+        textAlign: 'center', 
     },
 });
 

@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList, Text } from 'react-native';
+import { View, StyleSheet, ImageBackground, FlatList, Image } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
 import { connect } from 'react-redux'
@@ -24,46 +24,92 @@ class Main extends Component {
     }
 
     loadImage() {
-        const { imgBackground, spinnerTextStyle, flatlistStyle, footer } = styles
+
+        const data = [{
+            player: "Jugador",
+            pj: 'PJ',
+            pg: 'PG',
+            pp: 'PP',
+            gf: 'GF',
+            gc: 'GC',
+            dg: 'DG',
+            pts: 'PTS',
+            r: '%'
+        },
+        {
+            player: "Luis Castillo Calderon",
+            pj: '1',
+            pg: '10',
+            pp: '10',
+            gf: '10',
+            gc: '1',
+            dg: '1',
+            pts: '30',
+            r: '50%'
+        },
+        {
+            player: "Luis Castillo Calderon",
+            pj: '1',
+            pg: '10',
+            pp: '10',
+            gf: '10',
+            gc: '1',
+            dg: '1',
+            pts: '30',
+            r: '50%'
+        },
+        {
+            player: "Luis Castillo Calderon",
+            pj: '1',
+            pg: '10',
+            pp: '10',
+            gf: '10',
+            gc: '1',
+            dg: '1',
+            pts: '30',
+            r: '50%'
+        }]
+
+        const {
+            imgBackground,
+            spinnerTextStyle,
+            flatlistStyle,
+            viewImageProfileStyle,
+            imageProfileStyle,
+            footer } = styles
+
         if (this.props.images !== null) {
             return <ImageBackground
                 style={imgBackground}
                 source={{ uri: this.props.images.bg }}>
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: .9 }}>
+                        {/* TABLE */}
                         <View style={{ flex: .4 }}>
                             <FlatList
                                 style={flatlistStyle}
-                                data={[{
-                                    player: "Jugador",
-                                    pj: 'PJ',
-                                    pg: 'PG',
-                                    pp: 'PP',
-                                    gf: 'GF',
-                                    gc: 'GC',
-                                    dg: 'DG',
-                                    pts: 'PTS',
-                                    r: '%'
-                                },
-                                {
-                                    player: "Luis Castillo Calderon",
-                                    pj: '1',
-                                    pg: '10',
-                                    pp: '10',
-                                    gf: '10',
-                                    gc: '1',
-                                    dg: '1',
-                                    pts: '30',
-                                    r: '50%'
-                                }]}
+                                data={data}
                                 renderItem={({ item }) => <ListItem statistics={item} />}
                             />
                         </View>
-                        <View style={{ flex: .2, backgroundColor: '#fff' }}></View>
+                        
+                        {/* IMAGE PROFILE */}
+                        <View style={{ flex: .2, flexDirection: 'row', }}>
+                            <View style={viewImageProfileStyle}>
+                                <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
+                            </View>
+
+                            <View style={viewImageProfileStyle}>
+                                <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
+                            </View>
+                        </View>
+                        
+                        {/* SELECT PLAYER */}
                         <View style={{ flex: .1, backgroundColor: '#000' }}></View>
+                        
+                        {/* SET MATCH */}
                         <View style={{ flex: .3, backgroundColor: '#fff' }}></View>
-
-
+                        
                     </View>
                     <View style={footer}>
 
@@ -129,6 +175,15 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginRight: 10,
         marginLeft: 10,
+    },
+    viewImageProfileStyle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    imageProfileStyle: {
+        width: '50%',
+        height: '80%'
     },
     footer: {
         flex: .1,
