@@ -1,6 +1,7 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList, Image, Picker } from 'react-native';
+import { View, StyleSheet, ImageBackground, FlatList, Image, Picker, Text } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
 import { connect } from 'react-redux'
@@ -77,6 +78,9 @@ class Main extends Component {
             viewRowStyle,
             imageProfileStyle,
             viewContenPicker,
+            viewContentMatch,
+            imageTeamStyle,
+            textInputStyle,
             footer } = styles
 
         if (this.props.images !== null) {
@@ -85,7 +89,7 @@ class Main extends Component {
                 source={{ uri: this.props.images.bg }}>
                 <View style={{ flex: 1 }}>
 
-                    <View style={{ flex: .9 }}>
+                    <View style={{ flex: 1 }}>
                         {/* TABLE */}
                         <View style={{ flex: .4 }}>
                             <FlatList
@@ -134,48 +138,26 @@ class Main extends Component {
                         </View>
 
                         {/* SET MATCH */}
-                        <View style={{ flex: .3 }}>
-
-                            {/* <View style={viewRowStyle}>
-
-                                <View style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    marginTop: 20,
-                                    marginBottom: 20,
-                                    marginLeft: 10,
-                                    marginRight: 10,
-                                    borderBottomWidth: 1,
-                                    borderRadius: 10,
-                                    borderColor: '#000'
-                                }}>
-
+                        <View style={{ flex: .3, flexDirection: 'row' }}>
+                            <View style={viewRowStyle}>
+                                <View style={viewContentMatch}>
+                                    <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
+                                    <Text style={{ flex: 1 }}>Real Madrid</Text>
+                                    <TextInput style={textInputStyle} />
                                 </View>
-
                             </View>
 
                             <View style={viewRowStyle}>
-
-                                <View style={{
-                                    width: '100%',
-                                    height: '100%',
-                                    marginTop: 20,
-                                    marginBottom: 20,
-                                    marginLeft: 10,
-                                    marginRight: 10,
-                                    borderBottomWidth: 1,
-                                    borderRadius: 10,
-                                    borderColor: '#000'
-                                }}>
-
+                                <View style={viewContentMatch}>
+                                    <TextInput style={textInputStyle} />
+                                    <Text style={{ flex: 1 }} > Real Madrid </Text>
+                                    <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
                                 </View>
-
-                            </View> */}
-
+                            </View>
                         </View>
-
                     </View>
 
+                    {/* FOOTER */}
                     <View style={footer}>
 
                         <Button
@@ -256,6 +238,28 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    viewContentMatch: {
+        width: '90%',
+        height: '40%',
+        borderWidth: 2,
+        borderRadius: 10,
+        borderColor: '#03AEFE',
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    imageTeamStyle: {
+        flex: 1,
+        width: "25%",
+        height: "50%",
+        margin: 5
+    },
+    textInputStyle: {
+        flex: 1,
+        height: '70%',
+        margin: 5
     },
     footer: {
         flex: .1,
