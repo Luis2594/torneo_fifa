@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList, Image } from 'react-native';
+import { View, StyleSheet, ImageBackground, FlatList, Image, Picker } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
 import { connect } from 'react-redux'
@@ -74,8 +74,9 @@ class Main extends Component {
             imgBackground,
             spinnerTextStyle,
             flatlistStyle,
-            viewImageProfileStyle,
+            viewRowStyle,
             imageProfileStyle,
+            viewContenPicker,
             footer } = styles
 
         if (this.props.images !== null) {
@@ -83,6 +84,7 @@ class Main extends Component {
                 style={imgBackground}
                 source={{ uri: this.props.images.bg }}>
                 <View style={{ flex: 1 }}>
+
                     <View style={{ flex: .9 }}>
                         {/* TABLE */}
                         <View style={{ flex: .4 }}>
@@ -92,25 +94,88 @@ class Main extends Component {
                                 renderItem={({ item }) => <ListItem statistics={item} />}
                             />
                         </View>
-                        
+
                         {/* IMAGE PROFILE */}
-                        <View style={{ flex: .2, flexDirection: 'row', }}>
-                            <View style={viewImageProfileStyle}>
+                        <View style={{ flex: .2, flexDirection: 'row' }}>
+                            <View style={viewRowStyle}>
                                 <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
                             </View>
 
-                            <View style={viewImageProfileStyle}>
+                            <View style={viewRowStyle}>
                                 <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
                             </View>
                         </View>
-                        
+
                         {/* SELECT PLAYER */}
-                        <View style={{ flex: .1, backgroundColor: '#000' }}></View>
-                        
+                        <View style={{ flex: .1, flexDirection: 'row' }}>
+                            <View style={viewContenPicker}>
+                                <Picker style={{ width: '100%' }}>
+                                    <Picker.Item label="Monday" value="Monday" />
+                                    <Picker.Item label="Tuesday" value="Tuesday" />
+                                    <Picker.Item label="Wednesday" value="Wednesday" />
+                                    <Picker.Item label="Thursday" value="Thursday" />
+                                    <Picker.Item label="Friday" value="Friday" />
+                                    <Picker.Item label="Saturday" value="Saturday" />
+                                    <Picker.Item label="Sunday" value="Sunday" />
+                                </Picker>
+                            </View>
+
+                            <View style={viewContenPicker}>
+                                <Picker style={{ width: '100%' }}>
+                                    <Picker.Item label="Monday" value="Monday" />
+                                    <Picker.Item label="Tuesday" value="Tuesday" />
+                                    <Picker.Item label="Wednesday" value="Wednesday" />
+                                    <Picker.Item label="Thursday" value="Thursday" />
+                                    <Picker.Item label="Friday" value="Friday" />
+                                    <Picker.Item label="Saturday" value="Saturday" />
+                                    <Picker.Item label="Sunday" value="Sunday" />
+                                </Picker>
+                            </View>
+                        </View>
+
                         {/* SET MATCH */}
-                        <View style={{ flex: .3, backgroundColor: '#fff' }}></View>
-                        
+                        <View style={{ flex: .3 }}>
+
+                            {/* <View style={viewRowStyle}>
+
+                                <View style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    marginTop: 20,
+                                    marginBottom: 20,
+                                    marginLeft: 10,
+                                    marginRight: 10,
+                                    borderBottomWidth: 1,
+                                    borderRadius: 10,
+                                    borderColor: '#000'
+                                }}>
+
+                                </View>
+
+                            </View>
+
+                            <View style={viewRowStyle}>
+
+                                <View style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    marginTop: 20,
+                                    marginBottom: 20,
+                                    marginLeft: 10,
+                                    marginRight: 10,
+                                    borderBottomWidth: 1,
+                                    borderRadius: 10,
+                                    borderColor: '#000'
+                                }}>
+
+                                </View>
+
+                            </View> */}
+
+                        </View>
+
                     </View>
+
                     <View style={footer}>
 
                         <Button
@@ -176,7 +241,7 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginLeft: 10,
     },
-    viewImageProfileStyle: {
+    viewRowStyle: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
@@ -184,6 +249,13 @@ const styles = StyleSheet.create({
     imageProfileStyle: {
         width: '50%',
         height: '80%'
+    },
+    viewContenPicker: {
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     footer: {
         flex: .1,
