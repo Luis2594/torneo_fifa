@@ -1,6 +1,6 @@
 //import liraries
 import React, { Component } from 'react';
-import { View, StyleSheet, ImageBackground, FlatList, Image, Picker, Text } from 'react-native';
+import { View, StyleSheet, ImageBackground, FlatList, Image, Picker, Text, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
@@ -87,108 +87,105 @@ class Main extends Component {
             return <ImageBackground
                 style={imgBackground}
                 source={{ uri: this.props.images.bg }}>
-                <View style={{ flex: 1 }}>
 
-                    <View style={{ flex: 1 }}>
-                        {/* TABLE */}
-                        <View style={{ flex: .4 }}>
-                            <FlatList
-                                style={flatlistStyle}
-                                data={data}
-                                renderItem={({ item }) => <ListItem statistics={item} />}
-                            />
-                        </View>
+                {/* TABLE */}
+                <View style={{ flex: .4 }}>
+                    <FlatList
+                        style={flatlistStyle}
+                        data={data}
+                        renderItem={({ item }) => <ListItem statistics={item} />}
+                    />
+                </View>
 
-                        {/* IMAGE PROFILE */}
-                        <View style={{ flex: .2, flexDirection: 'row' }}>
-                            <View style={viewRowStyle}>
-                                <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
-                            </View>
-
-                            <View style={viewRowStyle}>
-                                <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
-                            </View>
-                        </View>
-
-                        {/* SELECT PLAYER */}
-                        <View style={{ flex: .1, flexDirection: 'row' }}>
-                            <View style={viewContenPicker}>
-                                <Picker style={{ width: '100%' }}>
-                                    <Picker.Item label="Monday" value="Monday" />
-                                    <Picker.Item label="Tuesday" value="Tuesday" />
-                                    <Picker.Item label="Wednesday" value="Wednesday" />
-                                    <Picker.Item label="Thursday" value="Thursday" />
-                                    <Picker.Item label="Friday" value="Friday" />
-                                    <Picker.Item label="Saturday" value="Saturday" />
-                                    <Picker.Item label="Sunday" value="Sunday" />
-                                </Picker>
-                            </View>
-
-                            <View style={viewContenPicker}>
-                                <Picker style={{ width: '100%' }}>
-                                    <Picker.Item label="Monday" value="Monday" />
-                                    <Picker.Item label="Tuesday" value="Tuesday" />
-                                    <Picker.Item label="Wednesday" value="Wednesday" />
-                                    <Picker.Item label="Thursday" value="Thursday" />
-                                    <Picker.Item label="Friday" value="Friday" />
-                                    <Picker.Item label="Saturday" value="Saturday" />
-                                    <Picker.Item label="Sunday" value="Sunday" />
-                                </Picker>
-                            </View>
-                        </View>
-
-                        {/* SET MATCH */}
-                        <View style={{ flex: .3, flexDirection: 'row' }}>
-                            <View style={viewRowStyle}>
-                                <View style={viewContentMatch}>
-                                    <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
-                                    <Text style={{ flex: 1 }}>Real Madrid</Text>
-                                    <TextInput style={textInputStyle} />
-                                </View>
-                            </View>
-
-                            <View style={viewRowStyle}>
-                                <View style={viewContentMatch}>
-                                    <TextInput style={textInputStyle} />
-                                    <Text style={{ flex: 1 }} > Real Madrid </Text>
-                                    <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
-                                </View>
-                            </View>
-                        </View>
+                {/* IMAGE PROFILE */}
+                <View style={{ flex: .2, flexDirection: 'row' }}>
+                    <View style={viewRowStyle}>
+                        <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
                     </View>
 
-                    {/* FOOTER */}
-                    <View style={footer}>
-
-                        <Button
-                            onPress={() => { }}
-                            bg={this.props.images.bgbtn}
-                        >
-                            Generar Partido
-                        </Button>
-
-                        <Button
-                            onPress={() => { }}
-                            bg={this.props.images.bgbtn}
-                        >
-                            Ver
-                            Partidos
-                        </Button>
-
-                        <Button
-                            onPress={() => { }}
-                            bg={this.props.images.bgbtn}
-                        >
-                            Finalizar Partido
-                        </Button>
-
+                    <View style={viewRowStyle}>
+                        <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
                     </View>
                 </View>
+
+                {/* SELECT PLAYER */}
+                <View style={{ flex: .1, flexDirection: 'row' }}>
+                    <View style={viewContenPicker}>
+                        <Picker style={{ width: '100%' }}>
+                            <Picker.Item label="Monday" value="Monday" />
+                            <Picker.Item label="Tuesday" value="Tuesday" />
+                            <Picker.Item label="Wednesday" value="Wednesday" />
+                            <Picker.Item label="Thursday" value="Thursday" />
+                            <Picker.Item label="Friday" value="Friday" />
+                            <Picker.Item label="Saturday" value="Saturday" />
+                            <Picker.Item label="Sunday" value="Sunday" />
+                        </Picker>
+                    </View>
+
+                    <View style={viewContenPicker}>
+                        <Picker style={{ width: '100%' }}>
+                            <Picker.Item label="Monday" value="Monday" />
+                            <Picker.Item label="Tuesday" value="Tuesday" />
+                            <Picker.Item label="Wednesday" value="Wednesday" />
+                            <Picker.Item label="Thursday" value="Thursday" />
+                            <Picker.Item label="Friday" value="Friday" />
+                            <Picker.Item label="Saturday" value="Saturday" />
+                            <Picker.Item label="Sunday" value="Sunday" />
+                        </Picker>
+                    </View>
+                </View>
+
+                {/* SET MATCH */}
+                <View style={{ flex: .3, flexDirection: 'row' }}>
+                    <View style={viewRowStyle}>
+                        <View style={viewContentMatch}>
+                            <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
+                            <Text style={{ flex: 1 }}>Real Madrid</Text>
+                            <TextInput style={textInputStyle} />
+                        </View>
+                    </View>
+
+                    <View style={viewRowStyle}>
+                        <View style={viewContentMatch}>
+                            <TextInput style={textInputStyle} />
+                            <Text style={{ flex: 1 }} > Real Madrid </Text>
+                            <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
+                        </View>
+                    </View>
+                </View>
+
+                {/* FOOTER */}
+                <View style={footer}>
+
+                    <Button
+                        onPress={() => { }}
+                        bg={this.props.images.bgbtn}
+                    >
+                        Generar Partido
+                        </Button>
+
+                    <Button
+                        onPress={() => { }}
+                        bg={this.props.images.bgbtn}
+                    >
+                        Ver
+                        Partidos
+                        </Button>
+
+                    <Button
+                        onPress={() => { }}
+                        bg={this.props.images.bgbtn}
+                    >
+                        Finalizar Partido
+                        </Button>
+
+                </View>
+
             </ImageBackground>
         } else {
             return <Spinner
                 visible={this.props.spinner}
-                textContent={'Loading...'}
+                textContent={'Cargando torneo...'}
                 textStyle={spinnerTextStyle}
             />
         }
@@ -200,6 +197,7 @@ class Main extends Component {
             <View style={container}>
                 {this.loadImage()}
             </View>
+
         );
     }
 }
@@ -211,6 +209,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#66CCFC'
     },
     imgBackground: {
+        flex: 1,
         width: '100%',
         height: '100%',
         justifyContent: 'center'
@@ -240,8 +239,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     viewContentMatch: {
-        width: '90%',
-        height: '40%',
+        flex: 1,
+        position: 'absolute',
         borderWidth: 2,
         borderRadius: 10,
         borderColor: '#03AEFE',
