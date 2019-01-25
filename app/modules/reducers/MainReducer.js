@@ -1,7 +1,8 @@
 import { LOAD_IMAGE_BACKGROUND } from '../types'
 const INITIAL_STATE = {
     images: null,
-    spinner: true
+    spinner: true,
+    players: []
 }
 
 export default (state = INITIAL_STATE, action) => {

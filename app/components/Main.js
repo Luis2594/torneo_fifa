@@ -6,13 +6,15 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 
-import { loadBackground } from '../modules/actions'
+import { loadBackground , deletePlayer, createPlayer} from '../modules/actions'
 import { Button, ListItem } from './common'
 
 // create a component
 class Main extends Component {
 
     componentWillMount() {
+        this.props.deletePlayer()
+        this.props.createPlayer()
         const ref = firebase.storage().ref('images/bg.png');
         ref.getDownloadURL()
             .then((urlBg) => {
@@ -274,5 +276,5 @@ const mapStateToProps = (state) => {
 }
 
 //make this component available to the app
-export default connect(mapStateToProps, { loadBackground })(Main);
+export default connect(mapStateToProps, { loadBackground, deletePlayer, createPlayer })(Main);
 
