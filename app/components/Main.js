@@ -5,16 +5,17 @@ import { TextInput } from 'react-native-paper';
 import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
 import { connect } from 'react-redux'
+import _ from 'lodash';
 
-import { loadBackground , deletePlayer, createPlayer} from '../modules/actions'
+import { loadBackground, managementPlayer, matchUpdate } from '../modules/actions'
 import { Button, ListItem } from './common'
 
 // create a component
 class Main extends Component {
 
     componentWillMount() {
-        this.props.deletePlayer()
-        this.props.createPlayer()
+        this.props.managementPlayer()
+
         const ref = firebase.storage().ref('images/bg.png');
         ref.getDownloadURL()
             .then((urlBg) => {
@@ -113,26 +114,20 @@ class Main extends Component {
                 {/* SELECT PLAYER */}
                 <View style={{ flex: .1, flexDirection: 'row' }}>
                     <View style={viewContenPicker}>
-                        <Picker style={{ width: '100%' }}>
-                            <Picker.Item label="Monday" value="Monday" />
-                            <Picker.Item label="Tuesday" value="Tuesday" />
-                            <Picker.Item label="Wednesday" value="Wednesday" />
-                            <Picker.Item label="Thursday" value="Thursday" />
-                            <Picker.Item label="Friday" value="Friday" />
-                            <Picker.Item label="Saturday" value="Saturday" />
-                            <Picker.Item label="Sunday" value="Sunday" />
+                        <Picker style={{ width: '100%' }}
+                            selectedValue={this.props.playerOne}
+                            onValueChange={value => this.props.matchUpdate({ prop: 'playerOne', value })}
+                        >
+                            {this.loadPlayersPicker()}
                         </Picker>
                     </View>
 
                     <View style={viewContenPicker}>
-                        <Picker style={{ width: '100%' }}>
-                            <Picker.Item label="Monday" value="Monday" />
-                            <Picker.Item label="Tuesday" value="Tuesday" />
-                            <Picker.Item label="Wednesday" value="Wednesday" />
-                            <Picker.Item label="Thursday" value="Thursday" />
-                            <Picker.Item label="Friday" value="Friday" />
-                            <Picker.Item label="Saturday" value="Saturday" />
-                            <Picker.Item label="Sunday" value="Sunday" />
+                        <Picker style={{ width: '100%' }}
+                            selectedValue={this.props.playerTwo}
+                            onValueChange={value => this.props.matchUpdate({ prop: 'playerTwo', value })}
+                        >
+                            {this.loadPlayersPicker()}
                         </Picker>
                     </View>
                 </View>
@@ -143,13 +138,22 @@ class Main extends Component {
                         <View style={viewContentMatch}>
                             <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
                             <Text style={{ flex: 1 }}>Real Madrid</Text>
-                            <TextInput style={textInputStyle} />
+                            <TextInput
+                                style={textInputStyle}
+                                keyboardType="number-pad"
+                                value={this.props.golesOne}
+                                onChangeText={value => this.props.matchUpdate({ prop: 'golesOne', value })}
+                            />
                         </View>
                     </View>
 
                     <View style={viewRowStyle}>
                         <View style={viewContentMatch}>
-                            <TextInput style={textInputStyle} />
+                            <TextInput
+                                style={textInputStyle}
+                                keyboardType="number-pad"
+                                value={this.props.golesTwo}
+                                onChangeText={value => this.props.matchUpdate({ prop: 'golesTwo', value })} />
                             <Text style={{ flex: 1 }} > Real Madrid </Text>
                             <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
                         </View>
@@ -191,6 +195,14 @@ class Main extends Component {
                 textStyle={spinnerTextStyle}
             />
         }
+    }
+
+    loadPlayersPicker() {
+        const dataPiker = this.props.players.map((player) => {
+            return (<Picker.Item key={player} label={player.name} value={player.id} />)
+        })
+
+        return dataPiker
     }
 
     render() {
@@ -271,10 +283,15 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const { images, spinner } = state.main
-    return { images, spinner }
+    const { images, spinner, playerOne, playerTwo, golesOne, golesTwo } = state.main
+
+    const players = _.map(state.main.players, (val) => {
+        return { ...val }
+    })
+
+    return { images, spinner, players, playerOne, playerTwo, golesOne, golesTwo }
 }
 
 //make this component available to the app
-export default connect(mapStateToProps, { loadBackground, deletePlayer, createPlayer })(Main);
+export default connect(mapStateToProps, { loadBackground, managementPlayer, matchUpdate })(Main);
 
