@@ -54,8 +54,8 @@ export const createPlayer = () => {
     }
 }
 
-const getAllPlayers = (dispatch) => {
-    return () => {
+export const getAllPlayers = () => {
+    return (dispatch) => {
         firebase.database().ref(`/players/`)
             .on('value', snapshot => {
                 dispatch({ type: PLAYERS_FETCH_SUCCESS, payload: snapshot.val() })
@@ -71,8 +71,8 @@ const getAllPlayers = (dispatch) => {
 //     }
 // }
 
-export const createTeam = (dispatch) => {
-    return () => {
+export const createTeam = () => {
+    return (dispatch) => {
         _.each(teams, function (team) {
             firebase.database().ref(`/teams/`)
                 .push(team)
@@ -81,8 +81,8 @@ export const createTeam = (dispatch) => {
     }
 }
 
-const getAllTeams = (dispatch) => {
-    return () => {
+export const getAllTeams = () => {
+    return (dispatch) => {
         firebase.database().ref(`/teams/`)
             .on('value', snapshot => {
                 dispatch({ type: TEAMS_FETCH_SUCCESS, payload: snapshot.val() })

@@ -7,15 +7,15 @@ import firebase from 'firebase'
 import { connect } from 'react-redux'
 import _ from 'lodash';
 
-import { loadImages, createPlayer, createTeam, matchUpdate } from '../modules/actions'
+import { loadImages, getAllPlayers, getAllTeams, matchUpdate } from '../modules/actions'
 import { Button, ListItem } from './common'
 
 // create a component
 class Main extends Component {
 
     componentWillMount() {
-        // this.props.createPlayer()
-        // this.props.createTeam()
+        this.props.getAllPlayers()
+        this.props.getAllTeams()
         this.props.loadImages()
     }
 
@@ -289,5 +289,5 @@ const mapStateToProps = (state) => {
 }
 
 //make this component available to the app
-export default connect(mapStateToProps, { loadImages, createPlayer, createTeam, matchUpdate })(Main);
+export default connect(mapStateToProps, { loadImages, getAllPlayers, getAllTeams, matchUpdate })(Main);
 
