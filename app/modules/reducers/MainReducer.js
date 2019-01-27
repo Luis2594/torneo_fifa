@@ -1,8 +1,9 @@
-import { LOAD_IMAGE_BACKGROUND, PLAYERS_FETCH_SUCCESS, MATCH_UPDATE } from '../types'
+import { LOAD_IMAGE, LOAD_IMAGE_SUCCESS, PLAYERS_FETCH_SUCCESS, TEAMS_FETCH_SUCCESS, MATCH_UPDATE } from '../types'
 const INITIAL_STATE = {
-    images: null,
     spinner: true,
+    imagesString: null,
     players: [],
+    teams: [],
     playerOne: '',
     playerTwo: '',
     golesOne: '',
@@ -11,16 +12,21 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case LOAD_IMAGE_BACKGROUND:
+        case LOAD_IMAGE_SUCCESS:
             return {
                 ...state,
-                images: action.payload,
+                imagesString: action.payload,
                 spinner: false
             }
         case PLAYERS_FETCH_SUCCESS:
             return {
                 ...state,
                 players: action.payload
+            }
+        case TEAMS_FETCH_SUCCESS:
+            return {
+                ...state,
+                teams: action.payload
             }
         case MATCH_UPDATE:
             return {

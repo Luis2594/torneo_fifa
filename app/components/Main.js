@@ -7,28 +7,19 @@ import firebase from 'firebase'
 import { connect } from 'react-redux'
 import _ from 'lodash';
 
-import { loadBackground, managementPlayer, matchUpdate } from '../modules/actions'
+import { loadImages, createPlayer, createTeam, matchUpdate } from '../modules/actions'
 import { Button, ListItem } from './common'
 
 // create a component
 class Main extends Component {
 
     componentWillMount() {
-        this.props.managementPlayer()
-
-        const ref = firebase.storage().ref('images/bg.png');
-        ref.getDownloadURL()
-            .then((urlBg) => {
-                const ref2 = firebase.storage().ref('images/bgbtn.png');
-                ref2.getDownloadURL()
-                    .then((urlBgButton) => {
-                        this.props.loadBackground({ urlBg, urlBgButton })
-                    });
-            });
+        // this.props.createPlayer()
+        // this.props.createTeam()
+        this.props.loadImages()
     }
 
     loadImage() {
-
         const data = [{
             player: "Jugador",
             pj: 'PJ',
@@ -86,10 +77,10 @@ class Main extends Component {
             textInputStyle,
             footer } = styles
 
-        if (this.props.images !== null) {
+        if (!this.props.spinner) {
             return <ImageBackground
                 style={imgBackground}
-                source={{ uri: this.props.images.bg }}>
+                source={{ uri: this.props.images[0].bg }}>
 
                 {/* TABLE */}
                 <View style={{ flex: .4 }}>
@@ -103,11 +94,11 @@ class Main extends Component {
                 {/* IMAGE PROFILE */}
                 <View style={{ flex: .2, flexDirection: 'row' }}>
                     <View style={viewRowStyle}>
-                        <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
+                        <Image style={imageProfileStyle} source={{ uri: this.props.images[0].bgbtn }} />
                     </View>
 
                     <View style={viewRowStyle}>
-                        <Image style={imageProfileStyle} source={{ uri: this.props.images.bgbtn }} />
+                        <Image style={imageProfileStyle} source={{ uri: this.props.images[0].bgbtn }} />
                     </View>
                 </View>
 
@@ -136,7 +127,7 @@ class Main extends Component {
                 <View style={{ flex: .3, flexDirection: 'row' }}>
                     <View style={viewRowStyle}>
                         <View style={viewContentMatch}>
-                            <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
+                            <Image style={imageTeamStyle} source={{ uri: this.props.images[0].bgbtn }} />
                             <Text style={{ flex: 1 }}>Real Madrid</Text>
                             <TextInput
                                 style={textInputStyle}
@@ -155,7 +146,7 @@ class Main extends Component {
                                 value={this.props.golesTwo}
                                 onChangeText={value => this.props.matchUpdate({ prop: 'golesTwo', value })} />
                             <Text style={{ flex: 1 }} > Real Madrid </Text>
-                            <Image style={imageTeamStyle} source={{ uri: this.props.images.bgbtn }} />
+                            <Image style={imageTeamStyle} source={{ uri: this.props.images[0].bgbtn }} />
                         </View>
                     </View>
                 </View>
@@ -165,14 +156,14 @@ class Main extends Component {
 
                     <Button
                         onPress={() => { }}
-                        bg={this.props.images.bgbtn}
+                        bg={this.props.images[0].bgbtn}
                     >
                         Generar Partido
                         </Button>
 
                     <Button
                         onPress={() => { }}
-                        bg={this.props.images.bgbtn}
+                        bg={this.props.images[0].bgbtn}
                     >
                         Ver
                         Partidos
@@ -180,7 +171,7 @@ class Main extends Component {
 
                     <Button
                         onPress={() => { }}
-                        bg={this.props.images.bgbtn}
+                        bg={this.props.images[0].bgbtn}
                     >
                         Finalizar Partido
                         </Button>
@@ -211,7 +202,6 @@ class Main extends Component {
             <View style={container}>
                 {this.loadImage()}
             </View>
-
         );
     }
 }
@@ -283,15 +273,21 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const { images, spinner, playerOne, playerTwo, golesOne, golesTwo } = state.main
+    const { imagesString, spinner, playerOne, playerTwo, golesOne, golesTwo } = state.main
+
+    const images = JSON.parse(imagesString)
 
     const players = _.map(state.main.players, (val) => {
         return { ...val }
     })
 
-    return { images, spinner, players, playerOne, playerTwo, golesOne, golesTwo }
+    const teams = _.map(state.main.teams, (val) => {
+        return { ...val }
+    })
+
+    return { images, spinner, players, teams, playerOne, playerTwo, golesOne, golesTwo }
 }
 
 //make this component available to the app
-export default connect(mapStateToProps, { loadBackground, managementPlayer, matchUpdate })(Main);
+export default connect(mapStateToProps, { loadImages, createPlayer, createTeam, matchUpdate })(Main);
 

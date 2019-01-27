@@ -1,0 +1,10 @@
+[
+    {
+        "name": "bg",
+        "img": "bg.png"
+    },
+    {
+        "name": "bgbtn",
+        "img": "bgbtn.png"
+    }
+]
