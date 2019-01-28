@@ -1,5 +1,14 @@
 [
     {
-        "name": "Jugador"
+        "image": "luis.png",
+        "name": "Luis"
+    },
+    {
+        "image": "keyler.png",
+        "name": "Keyler"
+    },
+    {
+        "image": "enrrique.png",
+        "name": "Enrique"
     }
 ]

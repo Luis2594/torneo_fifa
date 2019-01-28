@@ -7,16 +7,27 @@ import firebase from 'firebase'
 import { connect } from 'react-redux'
 import _ from 'lodash';
 
-import { loadImages, getAllPlayers, getAllTeams, matchUpdate } from '../modules/actions'
+import {
+    loadDataDefault,
+    loadOneImage,
+    loadImages,
+    getAllPlayers,
+    getAllTeams,
+    updateIDPlayer,
+    updateResultPlayer,
+    createPlayer
+} from '../modules/actions'
 import { Button, ListItem } from './common'
 
 // create a component
 class Main extends Component {
 
     componentWillMount() {
+        // this.props.createPlayer()
         this.props.getAllPlayers()
         this.props.getAllTeams()
         this.props.loadImages()
+        this.props.loadDataDefault({ id: '-LXJyZYMZJ1rFZS2_nL-', path: `players/luis.png` })
     }
 
     loadImage() {
@@ -94,11 +105,11 @@ class Main extends Component {
                 {/* IMAGE PROFILE */}
                 <View style={{ flex: .2, flexDirection: 'row' }}>
                     <View style={viewRowStyle}>
-                        <Image style={imageProfileStyle} source={{ uri: this.props.images[0].bgbtn }} />
+                        <Image style={imageProfileStyle} source={{ uri: this.props.playerOneImage }} />
                     </View>
 
                     <View style={viewRowStyle}>
-                        <Image style={imageProfileStyle} source={{ uri: this.props.images[0].bgbtn }} />
+                        <Image style={imageProfileStyle} source={{ uri: this.props.playerTwoImage }} />
                     </View>
                 </View>
 
@@ -107,7 +118,16 @@ class Main extends Component {
                     <View style={viewContenPicker}>
                         <Picker style={{ width: '100%' }}
                             selectedValue={this.props.playerOne}
-                            onValueChange={value => this.props.matchUpdate({ prop: 'playerOne', value })}
+                            onValueChange={value => {
+                                this.props.updateIDPlayer({ prop: 'playerOne', value })
+
+                                const playerTemp = _.find(this.props.players, function (player) {
+                                    return player.id == value;
+                                });
+
+                                this.props.loadOneImage({ prop: 'playerOneImage', path: `players/${playerTemp.image}` })
+                            }
+                            }
                         >
                             {this.loadPlayersPicker()}
                         </Picker>
@@ -116,7 +136,16 @@ class Main extends Component {
                     <View style={viewContenPicker}>
                         <Picker style={{ width: '100%' }}
                             selectedValue={this.props.playerTwo}
-                            onValueChange={value => this.props.matchUpdate({ prop: 'playerTwo', value })}
+                            onValueChange={value => {
+                                this.props.updateIDPlayer({ prop: 'playerTwo', value })
+
+                                const playerTemp = _.find(this.props.players, function (player) {
+                                    return player.id == value;
+                                });
+
+                                this.props.loadOneImage({ prop: 'playerTwoImage', path: `players/${playerTemp.image}` })
+                            }
+                            }
                         >
                             {this.loadPlayersPicker()}
                         </Picker>
@@ -133,7 +162,7 @@ class Main extends Component {
                                 style={textInputStyle}
                                 keyboardType="number-pad"
                                 value={this.props.golesOne}
-                                onChangeText={value => this.props.matchUpdate({ prop: 'golesOne', value })}
+                                onChangeText={value => this.props.updateResultPlayer({ prop: 'golesOne', value })}
                             />
                         </View>
                     </View>
@@ -144,7 +173,7 @@ class Main extends Component {
                                 style={textInputStyle}
                                 keyboardType="number-pad"
                                 value={this.props.golesTwo}
-                                onChangeText={value => this.props.matchUpdate({ prop: 'golesTwo', value })} />
+                                onChangeText={value => this.props.updateResultPlayer({ prop: 'golesTwo', value })} />
                             <Text style={{ flex: 1 }} > Real Madrid </Text>
                             <Image style={imageTeamStyle} source={{ uri: this.props.images[0].bgbtn }} />
                         </View>
@@ -192,7 +221,6 @@ class Main extends Component {
         const dataPiker = this.props.players.map((player) => {
             return (<Picker.Item key={player} label={player.name} value={player.id} />)
         })
-
         return dataPiker
     }
 
@@ -273,21 +301,51 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    const { imagesString, spinner, playerOne, playerTwo, golesOne, golesTwo } = state.main
+    const {
+        imagesString,
+        spinner,
+        playerOne,
+        playerOneImage,
+        playerTwo,
+        playerTwoImage,
+        golesOne,
+        golesTwo } = state.main
 
     const images = JSON.parse(imagesString)
 
-    const players = _.map(state.main.players, (val) => {
-        return { ...val }
+    const players = _.map(state.main.players, (val, id) => {
+        return { ...val, id }
     })
 
-    const teams = _.map(state.main.teams, (val) => {
-        return { ...val }
+    const teams = _.map(state.main.teams, (val, id) => {
+        return { ...val, id }
     })
 
-    return { images, spinner, players, teams, playerOne, playerTwo, golesOne, golesTwo }
+    return {
+        images,
+        spinner,
+        players,
+        teams,
+        playerOne,
+        playerOneImage,
+        playerTwo,
+        playerTwoImage,
+        golesOne,
+        golesTwo
+    }
 }
 
 //make this component available to the app
-export default connect(mapStateToProps, { loadImages, getAllPlayers, getAllTeams, matchUpdate })(Main);
+export default connect(mapStateToProps,
+    {
+        loadDataDefault,
+        loadOneImage,
+        loadImages,
+        getAllPlayers,
+        getAllTeams,
+        updateIDPlayer,
+        updateResultPlayer,
+        createPlayer
+    })
+    (Main);
 

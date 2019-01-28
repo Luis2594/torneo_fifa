@@ -3,11 +3,13 @@ import { Actions } from 'react-native-router-flux'
 import _ from 'lodash';
 
 import {
-    LOAD_IMAGE,
+    LOAD_DATA_DEFAULT,
+    LOAD_ONE_IMAGE_SUCCESS,
     LOAD_IMAGE_SUCCESS,
     PLAYERS_FETCH_SUCCESS,
     TEAMS_FETCH_SUCCESS,
-    MATCH_UPDATE
+    PLAYER_ID_UPDATE,
+    PLAYER_RESULT_UPDATE
 } from '../types'
 
 import players from '../src/data/players.json'
@@ -36,6 +38,19 @@ export const loadImages = () => {
     }
 }
 
+export const loadOneImage = ({ prop, path }) => {
+    return (dispatch) => {
+        const ref = firebase.storage().ref(path);
+        ref.getDownloadURL()
+            .then((url) => {
+                dispatch({
+                    type: LOAD_ONE_IMAGE_SUCCESS,
+                    payload: { prop, url }
+                })
+            });
+    }
+}
+
 // export const managementPlayer = () => {
 //     return (dispatch) => {
 //         firebase.database().ref(`/players`)
@@ -45,11 +60,10 @@ export const loadImages = () => {
 // }
 
 export const createPlayer = () => {
-    return (dispatch) => {
+    return () => {
         _.each(players, function (player) {
             firebase.database().ref(`/players/`)
                 .push(player)
-                .then(getAllPlayers(dispatch))
         })
     }
 }
@@ -90,9 +104,29 @@ export const getAllTeams = () => {
     }
 }
 
-export const matchUpdate = ({ prop, value }) => {
+export const updateIDPlayer = ({ prop, value }) => {
     return {
-        type: MATCH_UPDATE,
+        type: PLAYER_ID_UPDATE,
+        payload: { prop, value }
+    }
+}
+
+export const loadDataDefault = ({ id, path }) => {
+    return (dispatch) => {
+        const ref = firebase.storage().ref(path);
+        ref.getDownloadURL()
+            .then((url) => {
+                dispatch({
+                    type: LOAD_DATA_DEFAULT,
+                    payload: { id, url }
+                })
+            });
+    }
+}
+
+export const updateResultPlayer = ({ prop, value }) => {
+    return {
+        type: PLAYER_RESULT_UPDATE,
         payload: { prop, value }
     }
 }
