@@ -15,7 +15,10 @@ import {
     getAllTeams,
     updateIDPlayer,
     updateResultPlayer,
-    createPlayer
+    updateIDTeam,
+    updateNameTeam,
+    createPlayer,
+    createTeam
 } from '../modules/actions'
 import { Button, ListItem } from './common'
 
@@ -24,13 +27,14 @@ class Main extends Component {
 
     componentWillMount() {
         // this.props.createPlayer()
+        // this.props.createTeam()
         this.props.getAllPlayers()
         this.props.getAllTeams()
         this.props.loadImages()
         this.props.loadDataDefault({ id: '-LXJyZYMZJ1rFZS2_nL-', path: `players/luis.png` })
     }
 
-    loadImage() {
+    load() {
         const data = [{
             player: "Jugador",
             pj: 'PJ',
@@ -86,6 +90,7 @@ class Main extends Component {
             viewContentMatch,
             imageTeamStyle,
             textInputStyle,
+            textTeamStyle,
             footer } = styles
 
         if (!this.props.spinner) {
@@ -94,7 +99,7 @@ class Main extends Component {
                 source={{ uri: this.props.images[0].bg }}>
 
                 {/* TABLE */}
-                <View style={{ flex: .4 }}>
+                <View style={{ flex: .3 }}>
                     <FlatList
                         style={flatlistStyle}
                         data={data}
@@ -156,8 +161,8 @@ class Main extends Component {
                 <View style={{ flex: .3, flexDirection: 'row' }}>
                     <View style={viewRowStyle}>
                         <View style={viewContentMatch}>
-                            <Image style={imageTeamStyle} source={{ uri: this.props.images[0].bgbtn }} />
-                            <Text style={{ flex: 1 }}>Real Madrid</Text>
+                            <Image style={imageTeamStyle} source={{ uri: this.props.teamOneImage }} />
+                            <Text style={textTeamStyle}>{this.props.teamOneName}</Text>
                             <TextInput
                                 style={textInputStyle}
                                 keyboardType="number-pad"
@@ -174,8 +179,8 @@ class Main extends Component {
                                 keyboardType="number-pad"
                                 value={this.props.golesTwo}
                                 onChangeText={value => this.props.updateResultPlayer({ prop: 'golesTwo', value })} />
-                            <Text style={{ flex: 1 }} > Real Madrid </Text>
-                            <Image style={imageTeamStyle} source={{ uri: this.props.images[0].bgbtn }} />
+                            <Text style={textTeamStyle} > {this.props.teamTwoName}</Text>
+                            <Image style={imageTeamStyle} source={{ uri: this.props.teamTwoImage }} />
                         </View>
                     </View>
                 </View>
@@ -184,7 +189,30 @@ class Main extends Component {
                 <View style={footer}>
 
                     <Button
-                        onPress={() => { }}
+                        onPress={() => {
+
+                            const teamsLength = this.props.teams.length - 1
+                            const position1 = _.random(0, teamsLength)
+                            const team1 = _.find(this.props.teams, function (team, index) {
+                                return index == position1
+                            })
+
+                            this.props.updateIDTeam({ prop: 'teamOne', value: team1.id })
+                            this.props.updateNameTeam({ prop: 'teamOneName', value: team1.name })
+                            this.props.loadOneImage({ prop: 'teamOneImage', path: `teams/${team1.image}` })
+
+                            const position2 = _.random(teamsLength, function (position) {
+                                    return position !== position1
+                            })
+
+                            const team2 = _.find(this.props.teams, function (team, index) {
+                                return index == position2
+                            })
+
+                            this.props.updateIDTeam({ prop: 'teamTwo', value: team2.id })
+                            this.props.updateNameTeam({ prop: 'teamTwoName', value: team2.name })
+                            this.props.loadOneImage({ prop: 'teamTwoImage', path: `teams/${team2.image}` })
+                        }}
                         bg={this.props.images[0].bgbtn}
                     >
                         Generar Partido
@@ -228,7 +256,7 @@ class Main extends Component {
         const { container } = styles
         return (
             <View style={container}>
-                {this.loadImage()}
+                {this.load()}
             </View>
         );
     }
@@ -271,8 +299,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     viewContentMatch: {
-        flex: 1,
-        position: 'absolute',
+        margin: 3,
+        padding: 10,
         borderWidth: 2,
         borderRadius: 10,
         borderColor: '#03AEFE',
@@ -283,13 +311,18 @@ const styles = StyleSheet.create({
     },
     imageTeamStyle: {
         flex: 1,
-        width: "25%",
-        height: "50%",
-        margin: 5
+        width: 40,
+        height: 60
     },
     textInputStyle: {
         flex: 1,
         height: '70%',
+        margin: 1
+    },
+    textTeamStyle: {
+        flex: 1,
+        fontSize: 9,
+        alignItems: 'flex-start',
         margin: 5
     },
     footer: {
@@ -301,6 +334,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
+
     const {
         imagesString,
         spinner,
@@ -309,7 +343,14 @@ const mapStateToProps = (state) => {
         playerTwo,
         playerTwoImage,
         golesOne,
-        golesTwo } = state.main
+        golesTwo,
+        teamOne,
+        teamOneName,
+        teamOneImage,
+        teamTwo,
+        teamTwoName,
+        teamTwoImage
+    } = state.main
 
     const images = JSON.parse(imagesString)
 
@@ -331,7 +372,13 @@ const mapStateToProps = (state) => {
         playerTwo,
         playerTwoImage,
         golesOne,
-        golesTwo
+        golesTwo,
+        teamOne,
+        teamOneName,
+        teamOneImage,
+        teamTwo,
+        teamTwoName,
+        teamTwoImage
     }
 }
 
@@ -345,7 +392,10 @@ export default connect(mapStateToProps,
         getAllTeams,
         updateIDPlayer,
         updateResultPlayer,
-        createPlayer
+        updateIDTeam,
+        updateNameTeam,
+        createPlayer,
+        createTeam
     })
     (Main);
 

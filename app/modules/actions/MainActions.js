@@ -9,7 +9,9 @@ import {
     PLAYERS_FETCH_SUCCESS,
     TEAMS_FETCH_SUCCESS,
     PLAYER_ID_UPDATE,
-    PLAYER_RESULT_UPDATE
+    PLAYER_RESULT_UPDATE,
+    TEAM_ID_UPDATE,
+    TEAM_NAME_UPDATE
 } from '../types'
 
 import players from '../src/data/players.json'
@@ -86,11 +88,10 @@ export const getAllPlayers = () => {
 // }
 
 export const createTeam = () => {
-    return (dispatch) => {
+    return () => {
         _.each(teams, function (team) {
             firebase.database().ref(`/teams/`)
                 .push(team)
-                .then(getAllTeams(dispatch))
         })
     }
 }
@@ -107,6 +108,20 @@ export const getAllTeams = () => {
 export const updateIDPlayer = ({ prop, value }) => {
     return {
         type: PLAYER_ID_UPDATE,
+        payload: { prop, value }
+    }
+}
+
+export const updateIDTeam = ({ prop, value }) => {
+    return {
+        type: TEAM_ID_UPDATE,
+        payload: { prop, value }
+    }
+}
+
+export const updateNameTeam = ({ prop, value }) => {
+    return {
+        type: TEAM_NAME_UPDATE,
         payload: { prop, value }
     }
 }
