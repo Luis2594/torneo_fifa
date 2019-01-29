@@ -6,6 +6,7 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import firebase from 'firebase'
 import { connect } from 'react-redux'
 import _ from 'lodash';
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 import {
     loadDataDefault,
@@ -17,6 +18,7 @@ import {
     updateResultPlayer,
     updateIDTeam,
     updateNameTeam,
+    setResults,
     createPlayer,
     createTeam
 } from '../modules/actions'
@@ -90,13 +92,20 @@ class Main extends Component {
             viewContentMatch,
             imageTeamStyle,
             textInputStyle,
+            viewContentTextTeam,
             textTeamStyle,
             footer } = styles
 
         if (!this.props.spinner) {
+
             return <ImageBackground
                 style={imgBackground}
                 source={{ uri: this.props.images[0].bg }}>
+
+                <Spinner
+                    visible={this.props.setResult}
+                    textContent={'Insertando marcador...'}
+                />
 
                 {/* TABLE */}
                 <View style={{ flex: .3 }}>
@@ -162,7 +171,10 @@ class Main extends Component {
                     <View style={viewRowStyle}>
                         <View style={viewContentMatch}>
                             <Image style={imageTeamStyle} source={{ uri: this.props.teamOneImage }} />
-                            <Text style={textTeamStyle}>{this.props.teamOneName}</Text>
+                            <View style={viewContentTextTeam}>
+                                <Text style={textTeamStyle}>{this.props.teamOneName}</Text>
+                            </View>
+
                             <TextInput
                                 style={textInputStyle}
                                 keyboardType="number-pad"
@@ -179,7 +191,9 @@ class Main extends Component {
                                 keyboardType="number-pad"
                                 value={this.props.golesTwo}
                                 onChangeText={value => this.props.updateResultPlayer({ prop: 'golesTwo', value })} />
-                            <Text style={textTeamStyle} > {this.props.teamTwoName}</Text>
+                            <View style={viewContentTextTeam}>
+                                <Text style={textTeamStyle} > {this.props.teamTwoName}</Text>
+                            </View>
                             <Image style={imageTeamStyle} source={{ uri: this.props.teamTwoImage }} />
                         </View>
                     </View>
@@ -189,30 +203,7 @@ class Main extends Component {
                 <View style={footer}>
 
                     <Button
-                        onPress={() => {
-
-                            const teamsLength = this.props.teams.length - 1
-                            const position1 = _.random(0, teamsLength)
-                            const team1 = _.find(this.props.teams, function (team, index) {
-                                return index == position1
-                            })
-
-                            this.props.updateIDTeam({ prop: 'teamOne', value: team1.id })
-                            this.props.updateNameTeam({ prop: 'teamOneName', value: team1.name })
-                            this.props.loadOneImage({ prop: 'teamOneImage', path: `teams/${team1.image}` })
-
-                            const position2 = _.random(teamsLength, function (position) {
-                                    return position !== position1
-                            })
-
-                            const team2 = _.find(this.props.teams, function (team, index) {
-                                return index == position2
-                            })
-
-                            this.props.updateIDTeam({ prop: 'teamTwo', value: team2.id })
-                            this.props.updateNameTeam({ prop: 'teamTwoName', value: team2.name })
-                            this.props.loadOneImage({ prop: 'teamTwoImage', path: `teams/${team2.image}` })
-                        }}
+                        onPress={this.generateRandomMatch.bind(this)}
                         bg={this.props.images[0].bgbtn}
                     >
                         Generar Partido
@@ -227,7 +218,7 @@ class Main extends Component {
                         </Button>
 
                     <Button
-                        onPress={() => { }}
+                        onPress={this.finallyMatch.bind(this)}
                         bg={this.props.images[0].bgbtn}
                     >
                         Finalizar Partido
@@ -252,11 +243,68 @@ class Main extends Component {
         return dataPiker
     }
 
+    generateRandomMatch() {
+        const teamsLength = this.props.teams.length - 1
+        const position1 = _.random(0, teamsLength)
+        const team1 = _.find(this.props.teams, function (team, index) {
+            return index == position1
+        })
+
+        this.props.updateIDTeam({ prop: 'teamOne', value: team1.id })
+        this.props.updateNameTeam({ prop: 'teamOneName', value: team1.name })
+        this.props.loadOneImage({ prop: 'teamOneImage', path: `teams/${team1.image}` })
+
+        const position2 = _.random(teamsLength, function (position) {
+            return position !== position1
+        })
+
+        const team2 = _.find(this.props.teams, function (team, index) {
+            return index == position2
+        })
+
+        this.props.updateIDTeam({ prop: 'teamTwo', value: team2.id })
+        this.props.updateNameTeam({ prop: 'teamTwoName', value: team2.name })
+        this.props.loadOneImage({ prop: 'teamTwoImage', path: `teams/${team2.image}` })
+    }
+
+    finallyMatch() {
+        if (this.props.playerOne != '' &&
+            this.props.golesOne != '' &&
+            this.props.teamOne != '' &&
+            this.props.playerTwo != '' &&
+            this.props.golesTwo != '' &&
+            this.props.teamTwo != ''
+        ) {
+
+            if (this.props.playerOne == this.props.playerTwo) {
+                this.refs.toast.show('Seleccione dos jugadores distintos.');
+                return
+            }
+
+            if (this.props.teamOne == this.props.teamTwo) {
+                this.refs.toast.show('Seleccione dos equipos distintos.');
+                return
+            }
+
+            this.props.setResults({
+                playerOne: this.props.playerOne,
+                golesOne: this.props.golesOne,
+                teamOne: this.props.teamOne,
+                playerTwo: this.props.playerTwo,
+                golesTwo: this.props.golesTwo,
+                teamTwo: this.props.teamTwo
+            })
+        } else {
+            this.refs.toast.show('Ingrese los datos del partido.');
+        }
+    }
+
     render() {
         const { container } = styles
         return (
             <View style={container}>
                 {this.load()}
+                <Toast ref="toast" />
             </View>
         );
     }
@@ -311,7 +359,7 @@ const styles = StyleSheet.create({
     },
     imageTeamStyle: {
         flex: 1,
-        width: 40,
+        width: 45,
         height: 60
     },
     textInputStyle: {
@@ -319,11 +367,14 @@ const styles = StyleSheet.create({
         height: '70%',
         margin: 1
     },
-    textTeamStyle: {
+    viewContentTextTeam: {
         flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignContent: 'center'
+    },
+    textTeamStyle: {
         fontSize: 9,
-        alignItems: 'flex-start',
-        margin: 5
     },
     footer: {
         flex: .1,
@@ -336,7 +387,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
 
     const {
-        imagesString,
+        setResult,
+        images,
         spinner,
         playerOne,
         playerOneImage,
@@ -352,8 +404,6 @@ const mapStateToProps = (state) => {
         teamTwoImage
     } = state.main
 
-    const images = JSON.parse(imagesString)
-
     const players = _.map(state.main.players, (val, id) => {
         return { ...val, id }
     })
@@ -363,6 +413,7 @@ const mapStateToProps = (state) => {
     })
 
     return {
+        setResult,
         images,
         spinner,
         players,
@@ -394,6 +445,7 @@ export default connect(mapStateToProps,
         updateResultPlayer,
         updateIDTeam,
         updateNameTeam,
+        setResults,
         createPlayer,
         createTeam
     })

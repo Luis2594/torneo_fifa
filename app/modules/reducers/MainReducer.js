@@ -7,12 +7,16 @@ import {
     PLAYER_ID_UPDATE,
     PLAYER_RESULT_UPDATE,
     TEAM_ID_UPDATE,
-    TEAM_NAME_UPDATE
+    TEAM_NAME_UPDATE,
+    SET_RESULT_SUCCESS,
+    SET_RESULT_LOADING,
+    SET_IMAGE_DEFAULT
 } from '../types'
 
 const INITIAL_STATE = {
     spinner: true,
-    imagesString: null,
+    setResult: false,
+    images: null,
     players: [],
     teams: [],
     playerOne: '',
@@ -34,7 +38,9 @@ export default (state = INITIAL_STATE, action) => {
         case LOAD_IMAGE_SUCCESS:
             return {
                 ...state,
-                imagesString: action.payload,
+                images: action.payload,
+                teamOneImage: action.payload[0].sinLogo,
+                teamTwoImage: action.payload[0].sinLogo,
                 spinner: false
             }
         case PLAYERS_FETCH_SUCCESS:
@@ -67,6 +73,24 @@ export default (state = INITIAL_STATE, action) => {
                 playerTwo: action.payload.id,
                 playerOneImage: action.payload.url,
                 playerTwoImage: action.payload.url
+            }
+        case SET_RESULT_LOADING:
+            return {
+                ...state,
+                setResult: true
+            }
+        case SET_RESULT_SUCCESS:
+            return {
+                ...state,
+                golesOne: '',
+                golesTwo: '',
+                setResult: false
+            }
+        case SET_IMAGE_DEFAULT:
+            return {
+                ...state,
+                teamOneImage: action.payload.url,
+                teamTwoImage: action.payload.url
             }
         default:
             return state

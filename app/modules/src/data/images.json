@@ -6,5 +6,9 @@
     {
         "name": "bgbtn",
         "img": "bgbtn.png"
+    },
+    {
+        "name": "sinLogo",
+        "img": "sin_logo.png"
     }
 ]

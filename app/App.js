@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
+import { composeWithDevTools } from 'remote-redux-devtools'
 import firebase from 'firebase'
 import ReduxThunk from 'redux-thunk'
 
@@ -8,6 +9,14 @@ import reducers from './modules/reducers'
 import Router from './Router'
 
 console.disableYellowBox = true;
+
+
+const store = createStore(
+  reducers,
+  composeWithDevTools(
+    applyMiddleware(ReduxThunk)
+  )
+)
 
 export default class App extends Component {
 
@@ -24,7 +33,7 @@ export default class App extends Component {
   }
 
   render() {
-    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk))
+
     return (
       <Provider store={store}>
         <Router />

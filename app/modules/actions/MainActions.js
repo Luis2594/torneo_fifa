@@ -11,7 +11,10 @@ import {
     PLAYER_ID_UPDATE,
     PLAYER_RESULT_UPDATE,
     TEAM_ID_UPDATE,
-    TEAM_NAME_UPDATE
+    TEAM_NAME_UPDATE,
+    SET_RESULT_SUCCESS,
+    SET_RESULT_LOADING,
+    SET_IMAGE_DEFAULT
 } from '../types'
 
 import players from '../src/data/players.json'
@@ -28,11 +31,14 @@ export const loadImages = () => {
                 .then((url) => {
                     imagesTemp += `"${image.name}": "${url}",`
                     cont.push(url)
-                    if (cont.length == 2) {
+                    if (cont.length == 3) {
                         imagesTemp += '"": null}]'
+
+                        const images = JSON.parse(imagesTemp)
+
                         dispatch({
                             type: LOAD_IMAGE_SUCCESS,
-                            payload: imagesTemp
+                            payload: images
                         })
                     }
                 });
@@ -143,5 +149,21 @@ export const updateResultPlayer = ({ prop, value }) => {
     return {
         type: PLAYER_RESULT_UPDATE,
         payload: { prop, value }
+    }
+}
+
+export const setResults = ({ playerOne, golesOne, teamOne, playerTwo, golesTwo, teamTwo }) => {
+
+    const result = { playerOne, golesOne, teamOne, playerTwo, golesTwo, teamTwo }
+
+    return (dispatch) => {
+        dispatch({
+            type: SET_RESULT_LOADING
+        })
+        firebase.database().ref(`/results/`)
+            .push(result)
+            .then(dispatch({
+                type: SET_RESULT_SUCCESS
+            }))
     }
 }
